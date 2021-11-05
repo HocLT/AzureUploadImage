@@ -1,0 +1,42 @@
+﻿
+@{
+    ViewBag.Title = "Upload";
+}
+
+<h2>Upload</h2>
+
+<p>
+    @using (Html.BeginForm("Upload", "Home", FormMethod.Post, new { enctype="multipart/form-data" }))
+    {
+        <div>Image: <input type="file" name="image"/></div>
+        <div><input type="submit" value="Upload"/></div>
+    }
+</p>
+
+<ul style="list-style-type: none; padding: 10px;">
+    @foreach(var item in Model)
+    {
+        <li>
+            <img src="@item" alt="image" style="width:150px; height: auto"/>
+            <a data-filename="@item" href="#" class="delete-image">Delete</a>
+        </li>
+    }
+</ul>
+
+@section scripts {
+    <script>
+        $(document).ready(function () {
+            $('.delete-image').click(function (evt) {
+                evt.preventDefault();
+
+                let filename = $(this).data('filename');
+                let url = "/Home/DeleteImg";
+                $.post(url, { name: filename }, function (data) {
+                    // load lại trang Upload
+                    window.location.href = "/Home/Upload";
+                    alert(data);    // hiện thông báo trả về từ action /Home/DeleteImg
+                });
+            });
+        });
+    </script>    
+}
